@@ -93,7 +93,16 @@ public class CourseController {
 	}
 	
 	@PutMapping("/{courseId}/student/{studentID}")
-	public Course addStudent(@PathVariable int courseId, @PathVariable int studentID) {		
+	public Course addStudent(@PathVariable int courseId, @PathVariable int studentID) {
+		Optional<Course> res = courseRepository.findById(courseId);
+		Optional<Student> res1 = studentRepository.findById(studentID);
+		
+		if (!res.isPresent()) {
+			throw new CourseNotFoundException(courseId);
+		} else if (!res1.isPresent()) {
+			throw new InstructorNotFoundException(studentID);
+		}		
+		
 		Student student = studentRepository.findById(studentID).get();
 		Course tempCourse = courseRepository.findById(courseId).get();
 		
